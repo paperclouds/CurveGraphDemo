@@ -150,7 +150,7 @@ blue:((float)(rgbValue & 0xFF))/255.0 alpha:(a)]
 
 // 绘制背景网格
 - (void)drawGridWithDaysArray{
-    for (NSInteger i = 1; i < _dataArray.count-1; i++) {
+    for (NSInteger i = 0; i < _dataArray.count; i++) {
         NSValue *value = _dataArray[i];
         CGPoint p = value.CGPointValue;
         UIBezierPath *path = [UIBezierPath bezierPath];
