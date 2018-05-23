@@ -104,7 +104,7 @@ blue:((float)(rgbValue & 0xFF))/255.0 alpha:(a)]
         CGSize infoSize = [self getTextSizeWithText:obj fontSize:FontSize maxSize:CGSizeMake(MAXFLOAT, FontSize)]; //文字大小
     
         // 文字绘制起点
-        NSString *index = weakself.daysArray[idx];
+        NSString *index = weakself.xArray[idx];
         float startPointX = XToViewPadding+(index.intValue-1)*weakself.xInfoSpacing; //横坐标
         float startPointY = CGRectGetHeight(self.frame) - YToViewPadding + (YToViewPadding - infoSize.height)/2.0; //纵坐标
         CGPoint startPoint = CGPointMake(startPointX, startPointY);
@@ -135,7 +135,8 @@ blue:((float)(rgbValue & 0xFF))/255.0 alpha:(a)]
         NSString *index = self.daysArray[i];
         float startPointX = XToViewPadding+(index.intValue-1)*self.xInfoSpacing+10; //横坐标
         NSString *price = _priceDataArray[i];
-        float startPointY = 20+(CGRectGetHeight(self.frame)-YToViewPadding-20)*(15-price.floatValue)/15;
+        NSString *maxYData = self.priceDataArray[0];
+        float startPointY = 20+(CGRectGetHeight(self.frame)-YToViewPadding-20)*(maxYData.intValue-price.floatValue)/maxYData.intValue;
         CGPoint p = P_M(startPointX, startPointY);
         NSValue *value = [NSValue valueWithCGPoint:p];
         [_dataArray addObject:value];
@@ -522,15 +523,12 @@ blue:((float)(rgbValue & 0xFF))/255.0 alpha:(a)]
 #pragma mark  将坐标 转换为数据
 -(void)ponitToData:(CGPoint) p{
     
-    _maxYValue = [[self.yDataArray valueForKeyPath:@"@max.floatValue"] floatValue];
-    
     CGFloat x  =  p.x - XToViewPadding;
-    CGFloat y = p.y - YToViewPadding;
     
-    NSInteger time = x / (CGRectGetWidth(self.frame) - XToViewPadding * 2) * 30 + 1;
-    CGFloat price = (CGRectGetHeight(self.frame) - YToViewPadding - y) / (CGRectGetHeight(self.frame) - YToViewPadding) * 15;
+    int time = x / (CGRectGetWidth(self.frame) - XToViewPadding * 2) * 30 + 1;
+    CGFloat price = [self.priceDataArray[time-1] floatValue];
     
-    NSString *timeStr= [NSString stringWithFormat:@"%ld天",time];
+    NSString *timeStr= [NSString stringWithFormat:@"%d天",time];
     NSString *priceStr = [NSString stringWithFormat:@"%f",price];
     
     self.priceLbl.text = [NSString stringWithFormat:@"%@(租赁期)",timeStr];
